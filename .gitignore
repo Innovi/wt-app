@@ -49,3 +49,9 @@ Temporary Items
 .apdisk
 
 # Custom
+files/
+build/
+/vendor/
+*.zip
+yarn.lock
+*.log

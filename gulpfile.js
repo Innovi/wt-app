@@ -27,11 +27,10 @@
 
 // START Editing Project Variables.
 // Project related.
-var project              = 'wp-theme-boilerplate';                    // Project Name
-var theme                = 'wp_theme_boilerplate';                    // Theme Name
-var package              = 'wp-theme-boilerplate';                    // Package Name
+var project              = 'wt-app';                                  // Project Name
+var theme                = 'wtapp';                                   // Theme Name
+var package              = 'wtapp';                                   // Package Name
 var projectURL           = 'http://wptheme.dev';                      // Project URL
-var productURL           = './';                                      // Theme URL. Gulpfile.js lives in the root folder
 var build                = './buildtheme/';                           // Files that you want to package into a zip go here
 var buildInclude  = [
     // include common file types
@@ -67,7 +66,7 @@ var settings = {
     dist: "dist"
   },
   remote: 'origin'
-}
+};
 
 // Translation related.
 var text_domain          = 'wp-theme-boilerplate';                    // Your textdomain here
@@ -76,35 +75,45 @@ var packageName          = 'wp-theme-boilerplate';                    // Package
 var bugReport            = 'http://jobayerarman.github.io/';          // Where can users report bugs
 var lastTranslator       = 'Jobayer Arman <carbonjha@gmail.com>';     // Last translator Email ID
 var team                 = 'Jobayer Arman <carbonjha@email.com>';     // Team's Email ID
-var translatePath        = './languages'                              // Where to save the translation files
+var translatePath        = './languages';                              // Where to save the translation files
 
 // Style related
 var style = {
-  src    : './assets/src/styles/main.less',             // Path to main .less file
-  dest   : './assets/styles/',                           // Path to place the compiled CSS file
-  destFiles  : './assets/styles/*.+(css|map)'            // Destination files
+  src    : './src/styles/main.scss',                       // Path to main .scss file
+  dest   : './assets/styles/',                             // Path to place the compiled CSS file
+  destFiles  : './assets/styles/*.+(css|map)'              // Destination files
 };
 
 // JavaScript related
 var script = {
-  src    : './assets/src/scripts/*.js',                    // Path to JS custom scripts folder
-  dest   : './assets/scripts/',                            // Path to place the compiled JS custom scripts file
-  file   : 'script.js',                               // Compiled JS custom file name
-  destFiles   : './assets/scripts/*.js'                    // Destination files
-}
+  user: {
+    src    : './src/scripts/user/*.js',                      // Path to user JS scripts folder
+    dest   : './assets/scripts/',                            // Path to place the compiled scripts file
+    file   : 'script.js',                                    // Compiled JS file name
+    destFiles   : './assets/scripts/*.js'                    // Destination files
+  },
+  vendor: {
+    src    : ['./src/scripts/vendor/*.js',
+      './node_modules/popper.js/dist/umd/popper.js',
+      './node_modules/bootstrap/dist/js/bootstrap.js'],      // Path to vendor JS scripts folder
+    dest   : './assets/scripts/',                            // Path to place the compiled scripts file
+    file   : 'vendor.js',                                    // Compiled JS file name
+    destFiles   : './assets/scripts/*.js'                    // Destination files
+  }
+};
 
 // Images related.
 var image = {
   src    : './assets/src/img/**/*.{png,jpg,gif,svg}', // Source folder of images which should be optimized
   dest   : './assets/img/'                            // Destination folder of optimized images
-}
+};
 
 // Watch files paths.
 var watch = {
-  style  : './assets/src/styles/**/*.less',             // Path to all *.less files inside css folder and inside them
+  style  : './assets/src/styles/**/*.scss',             // Path to all *.scss files inside css folder and inside them
   script : './assets/src/scripts/*.js',                    // Path to all custom JS files
   php    : './**/*.php'                               // Path to all PHP files
-}
+};
 
 // Browsers you care about for autoprefixing.
 // Browserlist https://github.com/ai/browserslist
@@ -126,15 +135,16 @@ var gulp         = require('gulp');                  // Gulp of-course
 var gutil        = require('gulp-util');             // Utility functions for gulp plugins
 
 // CSS related plugins.
-var less         = require('gulp-less');             // Gulp pluign for Sass compilation.
+var sass         = require('gulp-sass');             // Gulp pluign for Sass compilation.
 var cleancss     = require('gulp-clean-css');        // Minifies CSS files.
 var autoprefixer = require('gulp-autoprefixer');     // Autoprefixing magic.
 var sourcemaps   = require('gulp-sourcemaps');       // Maps code in a compressed file (E.g. style.css) back to it’s original position in a source file.
 
 // JS related plugins.
-var jshint       = require('gulp-jshint');           // JSHint plugin for gulp
+var eslint       = require('gulp-eslint');           // ESlint plugin for gulp
 var concat       = require('gulp-concat');           // Concatenates JS files
 var uglify       = require('gulp-uglify');           // Minifies JS files
+var merge        = require('merge-stream');          // Merge (interleave) a bunch of streams
 
 // Image realted plugins.
 var imagemin     = require('gulp-imagemin');         // Minify PNG, JPEG, GIF and SVG images with imagemin.
@@ -157,7 +167,7 @@ var gulpif       = require('gulp-if');               // A ternary gulp plugin: c
 var lazypipe     = require('lazypipe');              // Lazypipe allows to create an immutable, lazily-initialized pipeline.
 var notify       = require('gulp-notify');           // Sends message notification to you
 var plumber      = require('gulp-plumber');          // Prevent pipe breaking caused by errors from gulp plugins
-var reload       = browserSync.reload;               // For manual browser reload.
+var reload       = browserSync.reload();               // For manual browser reload.
 var rename       = require('gulp-rename');           // Renames files E.g. style.css -> style.min.css
 var size         = require('gulp-size');             // Logs out the total size of files in the stream and optionally the individual file-sizes
 var sort         = require('gulp-sort');             // Recommended to prevent unnecessary changes in pot-file.
@@ -208,13 +218,13 @@ function errorLog(error) {
 gulp.task('update-function-name', function(done) {
   return gulp.src([ './**/*.php' ])
     .pipe(replace( 'wp_theme_boilerplate', theme ))
-    .pipe(gulp.dest( './' ))
+    .pipe(gulp.dest( './' ));
     done();
 });
 gulp.task('update-package-name', function(done) {
   return gulp.src([ './**/*.php' ])
     .pipe(replace( /(@package)(\s*)(.*)/, '$1$2' + package ))
-    .pipe(gulp.dest( './' ))
+    .pipe(gulp.dest( './' ));
     done();
 });
 gulp.task('update:all-name', gulpSequence('update-function-name', 'update-package-name'));
@@ -242,7 +252,7 @@ gulp.task( 'bump-dialog', function (callback) {
       var newVer = semver.inc(currentVersion, selectedChoice);
 
       bumpFiles(newVer, callback);
-    }))
+    }));
 });
 function bumpFiles(newVer, callback) {
   var date = new Date();
@@ -359,9 +369,9 @@ gulp.task('clean:all', gulpSequence('clean:css', 'clean:js', 'clean:build'));
 /**
   * Clean gulp cache
   */
-  gulp.task('clear', function () {
-    cache.clearAll();
-  });
+gulp.task('clear', function () {
+  cache.clearAll();
+});
 
 /**
  * Task: `browser-sync`.
@@ -398,63 +408,61 @@ gulp.task( 'browser-sync', function() {
 /**
  * Task: `styles`.
  *
- * Compiles LESS, Autoprefixes it and Minifies CSS.
+ * Compiles SCSS, Autoprefixes it and Minifies CSS.
  *
  */
 var minifyCss = lazypipe()
   .pipe(cleancss, {keepSpecialComments: false});
 
-gulp.task('styles', ['clean:css'], function() {
+gulp.task('build:styles', ['clean:css'], function() {
   return gulp.src(style.src)
     .pipe(plumber({errorHandler: errorLog}))
     .pipe(gulpif(config.sourceMaps, sourcemaps.init()))
 
-    .pipe(less())
+    .pipe(sass().on('error', sass.logError))
 
-    .pipe(gulpif(config.sourceMaps, sourcemaps.write({includeContent: false}))) // By default the source maps include the source code
-    .pipe(gulpif(config.sourceMaps, sourcemaps.init({loadMaps: true})))         // Set to true to load existing maps for source files
-
-    .pipe(autoprefixer( AUTOPREFIXER_BROWSERS ) )
-
+    .pipe(autoprefixer(AUTOPREFIXER_BROWSERS))
     .pipe(gulpif(config.sourceMaps, sourcemaps.write('.')))
 
     .pipe(gulpif(config.production, minifyCss()))
-
-
     .pipe(gulp.dest(style.dest))
-    .pipe(filter('**/*.css'))                                                     // Filtering stream to only css files
-    .pipe(browserSync.stream())                                                   // Injects CSS into browser
 
-    .pipe(size({
-      showFiles: true
-    }));
+    .pipe(filter('**/*.css'))
+    .pipe(browserSync.stream())
+    .pipe(size({showFiles: true}));
 });
 
 
 /**
   * Task: `scripts`.
   *
-  * Concatenate and uglify custom JS scripts.
+  * Concatenate and uglify vendor and user scripts.
   *
   */
-var minifyScripts = lazypipe()
-  .pipe(uglify);
+gulp.task('build:scripts', ['clean:js'], function() {
+  var minifyScripts = lazypipe().pipe(uglify);
 
-gulp.task( 'scripts', ['clean:js'], function() {
-  return gulp.src(script.src)
+  var vendorJs = gulp.src(script.vendor.src)
     .pipe(plumber({errorHandler: errorLog}))
 
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(concat(script.vendor.file))
+    .pipe(minifyScripts())
 
-    .pipe(concat(script.file))
+    .pipe(gulp.dest(script.vendor.dest))
+    .pipe(size({showFiles: true}));
+
+  var appJs =  gulp.src(script.user.src)
+    .pipe(plumber({errorHandler: errorLog}))
+    .pipe(eslint())
+    .pipe(eslint.format())
+
+    .pipe(concat(script.user.file))
     .pipe(gulpif(config.production, minifyScripts()))
 
-    .pipe(gulp.dest(script.dest))
+    .pipe(gulp.dest(script.user.dest))
+    .pipe(size({showFiles: true}));
 
-    .pipe(size({
-      showFiles: true
-    }));
+  return merge(vendorJs, appJs);
 });
 
 
@@ -466,13 +474,13 @@ gulp.task( 'scripts', ['clean:js'], function() {
   */
 gulp.task( 'images', function() {
   gulp.src(image.src)
-  .pipe(imagemin({
-    interlaced: true,
-    progressive: true,
-    optimizationLevel: 5, // 0-7 low-high
-    svgoPlugins: [{removeViewBox: false}]
-  }))
-  .pipe(gulp.dest(image.dest));
+    .pipe(imagemin({
+      interlaced: true,
+      progressive: true,
+      optimizationLevel: 5, // 0-7 low-high
+      svgoPlugins: [{removeViewBox: false}]
+    }))
+    .pipe(gulp.dest(image.dest));
 });
 
 
@@ -486,17 +494,17 @@ gulp.task( 'images', function() {
   *     4. Generate a .pot file of i18n that can be used for l10n to build .mo file
   */
 gulp.task( 'translate', function() {
- return gulp.src( projectPHPWatchFiles )
-   .pipe(sort())
-   .pipe(wpPot({
+  return gulp.src( projectPHPWatchFiles )
+    .pipe(sort())
+    .pipe(wpPot({
       domain         : text_domain,
       destFile       : destFile,
       package        : packageName,
       bugReport      : bugReport,
       lastTranslator : lastTranslator,
       team           : team
-   }))
-   .pipe( gulp.dest(translatePath));
+    }))
+    .pipe( gulp.dest(translatePath));
 });
 
 /**
@@ -505,22 +513,22 @@ gulp.task( 'translate', function() {
   * buildFiles copies all the files in buildInclude to build folder - check variable values at the top
   * buildImages copies all the images from img folder in assets while ignoring images inside raw folder if any
   */
-  gulp.task('buildFiles', function() {
-    return  gulp.src(buildInclude)
+gulp.task('buildFiles', function() {
+  return  gulp.src(buildInclude)
     .pipe(gulp.dest(build))
     .pipe(notify({ message: 'Copy from buildFiles complete', onLast: true }));
-  });
+});
 
 /**
   * Zipping build directory for distribution
   *
   * Taking the build folder, which has been cleaned, containing optimized files and zipping it up to send out as an installable theme
   */
-  gulp.task('buildZip', function () {
-    return  gulp.src(build+'/**/')
+gulp.task('buildZip', function () {
+  return  gulp.src(build+'/**/')
     .pipe(zip(project + '.zip'))
     .pipe(gulp.dest('./'));
-  });
+});
 
 // Package Distributable Theme
 gulp.task( 'build', function(cb) {
@@ -562,4 +570,4 @@ gulp.task('watch-php', function(done) {
 gulp.task('watch-scripts', ['scripts'], function(done) {
   reload();
   done();
-})
+});
