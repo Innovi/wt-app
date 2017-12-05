@@ -87,16 +87,17 @@ var style = {
 // JavaScript related
 var script = {
   user: {
-    src    : './src/js/user/*.js',                      // Path to user JS scripts folder
+    src    : './src/js/user/*.js',                           // Path to user JS scripts folder
     dest   : './assets/scripts/',                            // Path to place the compiled scripts file
-    file   : 'user.js',                                    // Compiled JS file name
+    file   : 'user.js',                                      // Compiled JS file name
     destFiles   : './assets/scripts/*.js'                    // Destination files
   },
   vendor: {
     src    : ['./src/js/vendor/*.js',
       './node_modules/popper.js/dist/umd/popper.js',
-      './node_modules/bootstrap/dist/js/bootstrap.js',
-      './node_modules/tooltip.js/dist/umd/tooltip.min.js'],  // Path to vendor JS scripts folder
+      './node_modules/tooltip.js/dist/umd/tooltip.js',
+      './node_modules/bootstrap/dist/js/bootstrap.js'
+    ],                                                       // Path to vendor JS scripts folder
     dest   : './assets/scripts/',                            // Path to place the compiled scripts file
     file   : 'vendor.js',                                    // Compiled JS file name
     destFiles   : './assets/scripts/*.js'                    // Destination files
@@ -111,8 +112,8 @@ var image = {
 
 // Watch files paths.
 var watch = {
-  style  : './assets/src/styles/**/*.scss',           // Path to all *.scss files inside css folder and inside them
-  script : './assets/src/scripts/*.js',               // Path to all custom JS files
+  style  : './src/scss/**/*.scss',           // Path to all *.scss files inside css folder and inside them
+  script : './src/js/*.js',               // Path to all custom JS files
   php    : './**/*.php'                               // Path to all PHP files
 };
 
