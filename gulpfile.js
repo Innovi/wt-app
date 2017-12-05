@@ -30,7 +30,7 @@
 var project              = 'wt-app';                                  // Project Name
 var theme                = 'wtapp';                                   // Theme Name
 var package              = 'wtapp';                                   // Package Name
-var projectURL           = 'http://wptheme.dev';                      // Project URL
+var projectURL           = 'http://wtapp.dev/';                       // Project URL
 var build                = './buildtheme/';                           // Files that you want to package into a zip go here
 var buildInclude  = [
     // include common file types
@@ -75,11 +75,11 @@ var packageName          = 'wp-theme-boilerplate';                    // Package
 var bugReport            = 'http://jobayerarman.github.io/';          // Where can users report bugs
 var lastTranslator       = 'Jobayer Arman <carbonjha@gmail.com>';     // Last translator Email ID
 var team                 = 'Jobayer Arman <carbonjha@email.com>';     // Team's Email ID
-var translatePath        = './languages';                              // Where to save the translation files
+var translatePath        = './languages';                             // Where to save the translation files
 
 // Style related
 var style = {
-  src    : './src/styles/main.scss',                       // Path to main .scss file
+  src    : './src/scss/main.scss',                         // Path to main .scss file
   dest   : './assets/styles/',                             // Path to place the compiled CSS file
   destFiles  : './assets/styles/*.+(css|map)'              // Destination files
 };
@@ -87,15 +87,16 @@ var style = {
 // JavaScript related
 var script = {
   user: {
-    src    : './src/scripts/user/*.js',                      // Path to user JS scripts folder
+    src    : './src/js/user/*.js',                      // Path to user JS scripts folder
     dest   : './assets/scripts/',                            // Path to place the compiled scripts file
-    file   : 'script.js',                                    // Compiled JS file name
+    file   : 'user.js',                                    // Compiled JS file name
     destFiles   : './assets/scripts/*.js'                    // Destination files
   },
   vendor: {
-    src    : ['./src/scripts/vendor/*.js',
+    src    : ['./src/js/vendor/*.js',
       './node_modules/popper.js/dist/umd/popper.js',
-      './node_modules/bootstrap/dist/js/bootstrap.js'],      // Path to vendor JS scripts folder
+      './node_modules/bootstrap/dist/js/bootstrap.js',
+      './node_modules/tooltip.js/dist/umd/tooltip.min.js'],  // Path to vendor JS scripts folder
     dest   : './assets/scripts/',                            // Path to place the compiled scripts file
     file   : 'vendor.js',                                    // Compiled JS file name
     destFiles   : './assets/scripts/*.js'                    // Destination files
@@ -110,8 +111,8 @@ var image = {
 
 // Watch files paths.
 var watch = {
-  style  : './assets/src/styles/**/*.scss',             // Path to all *.scss files inside css folder and inside them
-  script : './assets/src/scripts/*.js',                    // Path to all custom JS files
+  style  : './assets/src/styles/**/*.scss',           // Path to all *.scss files inside css folder and inside them
+  script : './assets/src/scripts/*.js',               // Path to all custom JS files
   php    : './**/*.php'                               // Path to all PHP files
 };
 
@@ -167,7 +168,7 @@ var gulpif       = require('gulp-if');               // A ternary gulp plugin: c
 var lazypipe     = require('lazypipe');              // Lazypipe allows to create an immutable, lazily-initialized pipeline.
 var notify       = require('gulp-notify');           // Sends message notification to you
 var plumber      = require('gulp-plumber');          // Prevent pipe breaking caused by errors from gulp plugins
-var reload       = browserSync.reload();               // For manual browser reload.
+var reload       = browserSync.reload;             // For manual browser reload.
 var rename       = require('gulp-rename');           // Renames files E.g. style.css -> style.min.css
 var size         = require('gulp-size');             // Logs out the total size of files in the stream and optionally the individual file-sizes
 var sort         = require('gulp-sort');             // Recommended to prevent unnecessary changes in pot-file.
@@ -359,7 +360,7 @@ gulp.task('clean:css', function() {
   return del([style.destFiles]);
 });
 gulp.task('clean:js', function() {
-  return del([script.destFiles]);
+  return del([script.user.destFiles]);
 });
 gulp.task('clean:build', function() {
   return del(build);
@@ -549,7 +550,7 @@ gulp.task( 'default', gulpSequence('clean:all', 'styles', 'scripts', 'translate'
  * Run all the tasks sequentially
  * Use this task for development
  */
-gulp.task( 'serve', gulpSequence('styles', 'scripts', 'watch'));
+gulp.task( 'serve', gulpSequence('build:styles', 'build:scripts', 'watch'));
 
 /**
   * Watch Tasks.
@@ -557,7 +558,7 @@ gulp.task( 'serve', gulpSequence('styles', 'scripts', 'watch'));
   * Watches for file changes and runs specific tasks.
   */
 gulp.task('watch', ['browser-sync'], function() {
-  gulp.watch(watch.style, ['styles']);         // Reload on less file changes.
+  gulp.watch(watch.style, ['build:styles']);         // Reload on less file changes.
   gulp.watch(watch.php, ['watch-php']);        // Reload on PHP file changes.
   gulp.watch(watch.script, ['watch-scripts']); // Reload on script file changes.
 });
@@ -567,7 +568,7 @@ gulp.task('watch-php', function(done) {
   reload();
   done();
 });
-gulp.task('watch-scripts', ['scripts'], function(done) {
+gulp.task('watch-scripts', ['build:scripts'], function(done) {
   reload();
   done();
 });

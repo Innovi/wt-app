@@ -6,6 +6,8 @@
     "type": "git",
     "url": "https://github.com/innovi/wt-app.git"
   },
+  "license": "UNLICENSED",
+  "private": true,
   "author": "Jobayer Arman <carbonjha@gmail.com> (http://jobayerarman.github.io/)",
   "bugs": {
     "url": "https://github.com/innovi/wt-app/issues"
@@ -23,6 +25,7 @@
     "gulp-clean-css": "^3.7.0",
     "gulp-concat": "^2.6.0",
     "gulp-conventional-changelog": "^1.1.4",
+    "gulp-eslint": "^4.0.0",
     "gulp-filter": "^5.0.0",
     "gulp-git": "^2.4.1",
     "gulp-github-release": "^1.2.1",
@@ -33,6 +36,7 @@
     "gulp-prompt": "^0.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.6.1",
+    "gulp-sass": "^3.1.0",
     "gulp-sequence": "^0.4.6",
     "gulp-shell": "^0.6.3",
     "gulp-size": "^2.1.0",
@@ -47,6 +51,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
-    "popper.js": "^1.12.9"
+    "popper.js": "^1.12.9",
+    "tooltip.js": "^1.1.7"
   }
 }
