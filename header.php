@@ -23,50 +23,35 @@
 
     <body <?php body_class(); ?>>
 
-        <div id="page" class="site">
+        <header id="masthead" class="site-header" role="banner">
 
-            <header id="masthead" class="site-header" role="banner">
-                <div class="site-branding text-center">
-                    <?php
-                    if ( is_front_page() && is_home() ) : ?>
-                        <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-                    <?php else : ?>
-                        <h2 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h2>
-                    <?php
-                    endif;
+            <nav id="site-navigation" class="navbar navbar-toggleable-sm navbar-light bg-primary" role="navigation">
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="#">Weight Tracker</a>
 
-                    $description = get_bloginfo( 'description', 'display' );
-                    if ( $description || is_customize_preview() ) : ?>
-                        <h6 class="site-description"><?php echo $description; /* WPCS: xss ok. */ ?></h6>
-                    <?php
-                    endif; ?>
-                </div><!-- .site-branding -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Section 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Section 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Section 3</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Section 4</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-                <nav id="site-navigation" class="navbar navbar-default main-navigation" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <?php
-                            wp_nav_menu( array(
-                                'menu'              => 'primary',
-                                'theme_location'    => 'primary',
-                                'depth'             =>  2,
-                                'container'         => 'div',
-                                'container_class'   => 'collapse navbar-collapse',
-                                'container_id'      => 'bs-example-navbar-collapse-1',
-                                'menu_class'        => 'nav navbar-nav',
-                                'fallback_cb'       => 'wp_bootstrap_navwalker::fallback',
-                                'walker'            => new wp_bootstrap_navwalker())
-                            );
-                        ?>
-                    </div> <!-- .container -->
-                </nav> <!-- #site-navigation -->
-            </header> <!-- #masthead -->
+        </header> <!-- #masthead -->
 
-            <div id="content" class="site-content">
+        <div id="content" class="site-content">
