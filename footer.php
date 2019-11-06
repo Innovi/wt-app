@@ -13,9 +13,12 @@
 
     </div> <!-- #content -->
 
-    <footer id="colophon" class="site-footer" role="contentinfo">
+    <footer id="colophon" class="site-footer bg-faded" role="contentinfo">
+        <div class="copyright-info text-center">
+            <p>WT App &copy; <?php echo date("Y"); ?> | All Rights Reserved</p>
+        </div>
         <div class="site-info text-center">
-            <p>Design and Developed by <a href="<?php echo esc_url( __( '//innovi.com.bd/', 'wtapp' ) ); ?>">Innovi</a></p>
+            <p><small>Design and Developed by <a href="<?php echo esc_url( __( '//innovi.com.bd/', 'wtapp' ) ); ?>">Innovi</a></small></p>
         </div><!-- .site-info -->
     </footer><!-- #colophon -->
 
